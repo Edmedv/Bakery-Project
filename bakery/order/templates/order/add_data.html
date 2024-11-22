@@ -7,6 +7,7 @@
 
     <div class="col">
       <form method="post">
+          {% csrf_token %}
           <div class="mb-3">
               <label for="exampleFormControlInput1" class="form-label">Товар</label>
               <input name="product" type="text" class="form-control" id="exampleFormControlInput1">
@@ -20,14 +21,15 @@
 
     <div class="col">
       <form method="post">
+          {% csrf_token %}
           <div class="mb-3">
               <label for="exampleFormControlInput2" class="form-label">Клиент</label>
               <input name="client" type="text" class="form-control" id="exampleFormControlInput2">
               <p></p>
-              <select class="form-select" aria-label="Default select example">
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
+              <select name="drive" class="form-select" aria-label="Default select example">
+                  {% for d in drivers %}
+                    <option value="{{ d.driver }}">{{ d.driver }}</option>
+                  {% endfor %}
                 </select>
           </div>
           <p></p>
@@ -39,6 +41,7 @@
 
     <div class="col">
       <form method="post">
+          {% csrf_token %}
           <div class="mb-3">
               <label for="exampleFormControlInput3" class="form-label">Водитель</label>
               <input name="driver" type="text" class="form-control" id="exampleFormControlInput3">
