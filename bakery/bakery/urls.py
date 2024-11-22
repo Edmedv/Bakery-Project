@@ -17,9 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from order.views import add_data
+from order.views import add_data, order
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', add_data, name='add_data'),
+    path('add_data/', add_data, name='add_data'),
+    path('', order, name='order'),
 ]

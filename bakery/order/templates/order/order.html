@@ -1,4 +1,38 @@
 {% extends 'order/base.html' %}
 
 {% block content %}
+
+<h1>Заявка</h1>
+<p></p>
+<form method="post">
+    {% csrf_token %}
+<table class="table table-bordered border-primary">
+  <thead>
+    <tr>
+        <th scope="col">#</th>
+        {% for p in products %}
+            <th scope="col">{{ p.product }}</th>
+        {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for c in clients %}
+        <tr>
+            <th scope="row">{{ c.client }}</th>
+            {% for p in products %}
+                <td>
+                    <div class="mb-3">
+                        <input name="{{ c.client }}:{{ p.product }}" type="number" class="form-control" id="exampleFormControlInput1" placeholder="Число">
+                    </div>
+                </td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<div class="d-grid gap-2">
+  <button class="btn btn-primary" type="submit">Отправить</button>
+</div>
+</form>
+
 {% endblock %}

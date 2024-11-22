@@ -1,9 +1,50 @@
 from django.shortcuts import render
 
-from order.models import Drivers, Clients, Products
+from order.models import Drivers, Clients, Products, Orders
 
 
 # Create your views here.
+
+def select_drivers():
+    return Drivers.objects.all()
+
+def select_clients():
+    return Clients.objects.all()
+
+def select_products():
+    return Products.objects.all()
+
+
+def order(request):
+    if request.method == 'POST':
+        for r in request.POST:
+            if r != 'csrfmiddlewaretoken':
+                req = r.split(':')
+                client_now = req[0]
+                client_id = Clients.objects.filter(client=client_now).first()
+
+                product_now = req[1]
+                product_id = Products.objects.filter(product=product_now).first()
+
+                driver_now = Clients.objects.filter(client=client_now).first().driver_id.id
+                driver_id = Drivers.objects.filter(id=driver_now).first()
+
+                print(request.POST[f'{r}'])
+                if request.POST[f'{r}'] == '':
+                    Orders.objects.create(driver_id=driver_id,
+                                          client_id=client_id,
+                                          product_id=product_id)
+                else:
+                    Orders.objects.create(driver_id=driver_id,
+                                          client_id=client_id,
+                                          product_id=product_id,
+                                          number=request.POST[f'{r}'])
+
+    clients = select_clients()
+    products = select_products()
+    return render(request, 'order/order.html',
+                  {'clients': clients, 'products': products})
+
 
 def add_data(request):
     if request.method == 'POST':
