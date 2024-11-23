@@ -1,0 +1,38 @@
+{% extends 'order/base.html' %}
+
+{% block content %}
+
+{% for key, value in drivers.items %}
+<h2>{{ key }}</h2>
+<div class="container text-center">
+  <div class="row justify-content-start">
+    <div class="col-4">
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              {% for p in products %}
+                <th scope="col">{{ p }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+
+          <tbody>
+          {% for key, value2 in value.items %}
+            <tr>
+              <th scope="row">{{ key }}</th>
+              {% for v in value2 %}
+              <td>{{ v }}</td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+{% endblock %}

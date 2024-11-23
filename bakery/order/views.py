@@ -1,6 +1,7 @@
 from django.shortcuts import render
-
+from datetime import date
 from order.models import Drivers, Clients, Products, Orders
+import pandas as pd
 
 
 # Create your views here.
@@ -29,7 +30,6 @@ def order(request):
                 driver_now = Clients.objects.filter(client=client_now).first().driver_id.id
                 driver_id = Drivers.objects.filter(id=driver_now).first()
 
-                print(request.POST[f'{r}'])
                 if request.POST[f'{r}'] == '':
                     Orders.objects.create(driver_id=driver_id,
                                           client_id=client_id,
@@ -60,3 +60,22 @@ def add_data(request):
 
     drivers = Drivers.objects.all()
     return render(request, 'order/add_data.html', {'drivers': drivers})
+
+
+def print_orders(request):
+    today = date.today()
+    drivers = {}
+    for o in Orders.objects.filter(date=today).values('driver_id', 'client_id', 'number'):
+        if o['driver_id'] not in drivers:
+            drivers[o['driver_id']] = {}
+        if o['client_id'] not in drivers[o['driver_id']]:
+            drivers[o['driver_id']][o['client_id']] = []
+        drivers[o['driver_id']][o['client_id']].append(o['number'])
+
+    products = []
+    for p in Orders.objects.filter(date=today):
+        if p.product_id.product not in products:
+            products.append(p.product_id.product)
+
+    return render(request, 'order/print_order.html',
+                  {'drivers': drivers, 'products': products})
