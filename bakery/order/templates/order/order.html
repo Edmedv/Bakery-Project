@@ -11,10 +11,15 @@
     <tr>
         <th scope="col">#</th>
         {% for p in products %}
-            <th scope="col">{{ p.product }}</th>
+            <th scope="col">
+                <figure class="text-center">
+                    <span class="rotate-sm-90">{{ p.product }}</span>
+                </figure>
+            </th>
         {% endfor %}
     </tr>
   </thead>
+
   <tbody>
     {% for c in clients %}
         <tr>
@@ -31,7 +36,7 @@
   </tbody>
 </table>
 <div class="d-grid gap-2">
-  <button class="btn btn-primary" type="submit">Отправить</button>
+  <button class="btn btn-danger" type="submit">Отправить</button>
 </div>
 </form>
 

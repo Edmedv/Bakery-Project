@@ -2,29 +2,87 @@
 
 {% block content %}
 
+<form method="post">
+  {% csrf_token %}
+  <label>Выберите дату</label>
+  <input name="date_order" type="date" value="{{ today }}">
+  <button type="submit" class="btn btn-warning">Показать</button>
+</form>
+
+<hr class="border border-primary border-3 opacity-75">
+<figure class="text-center">
+  <h1>Итоговая заявка</h1>
+</figure>
+
+<table class="table table-bordered border-primary">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      {% for value in orders.clients %}
+      <th scope="col">
+        <figure class="text-center">
+          <span class="rotate-sm-90">{{ value }}</span>
+        </figure>
+      </th>
+      {% endfor %}
+      <th scope="col">
+        <figure class="text-center">
+          Сумма
+        </figure>
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+  {% for key, value in orders.products.items %}
+    <tr>
+      <th scope="row">{{ key }}</th>
+      {% for num in value %}
+        <td>{{ num }}</td>
+      {% endfor %}
+    </tr>
+  {% endfor %}
+    <tr class="table-dark">
+      <th scope="row">Сумма</th>
+      {% for s in sum_client %}
+        <td>{{ s }}</td>
+      {% endfor %}
+        <td>{{ sum_cli }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr class="border border-primary border-3 opacity-75">
+<hr class="border border-danger border-2 opacity-50">
+
 {% for key, value in drivers.items %}
-<h2>{{ key }}</h2>
+<figure class="text-center">
+  <h2>{{ key }}</h2>
+</figure>
 <div class="container text-center">
   <div class="row justify-content-start">
-    <div class="col-4">
+    <div class="col-10">
 
         <table class="table">
           <thead>
             <tr>
               <th scope="col">#</th>
-              {% for p in products %}
-                <th scope="col">{{ p }}</th>
+              {% for c in value.clients %}
+                <th scope="col">
+                  <span class="rotate-sm-90">{{ c }}</span>
+                </th>
               {% endfor %}
+                <th scope="col">Сумма</th>
             </tr>
           </thead>
 
           <tbody>
-          {% for key, value2 in value.items %}
+          {% for key, value in value.products.items %}
             <tr>
               <th scope="row">{{ key }}</th>
-              {% for v in value2 %}
-              <td>{{ v }}</td>
-              {% endfor %}
+                {% for p in value %}
+                  <td>{{ p }}</td>
+                {% endfor %}
             </tr>
           {% endfor %}
           </tbody>
@@ -33,6 +91,8 @@
     </div>
   </div>
 </div>
+<hr class="border border-danger border-2 opacity-50">
 {% endfor %}
+
 
 {% endblock %}

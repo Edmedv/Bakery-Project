@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from datetime import date
+import datetime
+import numpy as np
 from order.models import Drivers, Clients, Products, Orders
 import pandas as pd
 
@@ -63,19 +64,56 @@ def add_data(request):
 
 
 def print_orders(request):
-    today = date.today()
+    if request.method == 'POST':
+        today = request.POST['date_order']
+    else:
+        today = datetime.date.today().isoformat()
     drivers = {}
-    for o in Orders.objects.filter(date=today).values('driver_id', 'client_id', 'number'):
+    orders = {}
+    orders['clients'] = []
+    orders['products'] = {}
+    sum_client = []
+
+    for o in Orders.objects.filter(date=today).values('driver_id', 'client_id', 'product_id', 'number'):
         if o['driver_id'] not in drivers:
             drivers[o['driver_id']] = {}
-        if o['client_id'] not in drivers[o['driver_id']]:
-            drivers[o['driver_id']][o['client_id']] = []
-        drivers[o['driver_id']][o['client_id']].append(o['number'])
+            drivers[o['driver_id']]['clients'] = []
+            drivers[o['driver_id']]['products'] = {}
 
-    products = []
-    for p in Orders.objects.filter(date=today):
-        if p.product_id.product not in products:
-            products.append(p.product_id.product)
+        if o['client_id'] not in drivers[o['driver_id']]['clients']:
+            drivers[o['driver_id']]['clients'].append(o['client_id'])
+        index = drivers[o['driver_id']]['clients'].index(o['client_id'])
+
+        if o['product_id'] not in drivers[o['driver_id']]['products']:
+            drivers[o['driver_id']]['products'][o['product_id']] = []
+
+        drivers[o['driver_id']]['products'][o['product_id']].insert(index, o['number'])
+
+    for key, value in drivers.items():
+        for key2, value2 in value['products'].items():
+            value2.append(sum(value2))
+
+    for o in Orders.objects.filter(date=today).values('client_id', 'product_id', 'number'):
+        if o['client_id'] not in orders['clients']:
+            orders['clients'].append(o['client_id'])
+            index = orders['clients'].index(o['client_id'])
+
+        if o['product_id'] not in orders['products']:
+            orders['products'][o['product_id']] = []
+
+        orders['products'][o['product_id']].insert(index, o['number'])
+
+    for key, value in orders['products'].items():
+        if sum_client == []:
+            sum_client = value
+        sum_client = np.add(sum_client, value).tolist()
+        value.append(sum(value))
+    print(sum_client)
+
+    sum_cli = sum(sum_client)
 
     return render(request, 'order/print_order.html',
-                  {'drivers': drivers, 'products': products})
+                  {'drivers': drivers, 'orders': orders, 'today': today,
+                   'sum_client': sum_client, 'sum_cli': sum_cli})
+
+
