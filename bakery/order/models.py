@@ -13,7 +13,6 @@ class Clients(models.Model):
     driver_id = models.ForeignKey('Drivers', on_delete=models.PROTECT)
 
 
-
 class Products(models.Model):
     product = models.CharField(max_length=50, unique=True, null=False)
 

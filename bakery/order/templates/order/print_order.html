@@ -18,7 +18,7 @@
   <thead>
     <tr>
       <th scope="col">#</th>
-      {% for value in orders.clients %}
+      {% for value in orders.products %}
       <th scope="col">
         <figure class="text-center">
           <span class="rotate-sm-90">{{ value }}</span>
@@ -34,7 +34,7 @@
   </thead>
 
   <tbody>
-  {% for key, value in orders.products.items %}
+  {% for key, value in orders.clients.items %}
     <tr>
       <th scope="row">{{ key }}</th>
       {% for num in value %}

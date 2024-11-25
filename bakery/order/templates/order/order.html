@@ -1,8 +1,16 @@
 {% extends 'order/base.html' %}
 
-{% block content %}
+{% block style %}
+        thead tr th{
+          position: sticky;
+          top: 0;
+        }
+        {% endblock %}
 
-<h1>Заявка</h1>
+{% block content %}
+<figure class="text-center">
+    <h1>Заявка</h1>
+</figure>
 <p></p>
 <form method="post">
     {% csrf_token %}
@@ -39,5 +47,6 @@
   <button class="btn btn-danger" type="submit">Отправить</button>
 </div>
 </form>
+    <p></p>
 
 {% endblock %}
