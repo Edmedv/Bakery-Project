@@ -4,22 +4,34 @@ from django.db import models
 
 
 class Drivers(models.Model):
-    driver = models.CharField(max_length=50, unique=True, null=False)
+    name = models.CharField(max_length=50, unique=True, null=False)
+
+    def __str__(self):
+        return self.name
 
 
 
 class Clients(models.Model):
-    client = models.CharField(max_length=50, unique=True, null=False)
-    driver_id = models.ForeignKey('Drivers', on_delete=models.PROTECT)
+    name = models.CharField(max_length=50, unique=True, null=False)
+    str_torg12 = models.CharField(max_length=200, unique=True)
+    str_standart = models.CharField(max_length=200, unique=True)
+    driver = models.ForeignKey('Drivers', on_delete=models.SET_NULL, null=True)
 
 
 class Products(models.Model):
-    product = models.CharField(max_length=50, unique=True, null=False)
+    name = models.CharField(max_length=50, unique=True, null=False)
+    price = models.FloatField(null = False)
+    weight = models.FloatField(null =False)
 
 
 class Orders(models.Model):
-    driver_id = models.ForeignKey('Drivers', to_field='driver', on_delete=models.PROTECT)
-    client_id = models.ForeignKey('Clients', to_field='client', on_delete=models.PROTECT)
-    product_id = models.ForeignKey('Products', to_field='product',on_delete=models.PROTECT)
+    driver = models.ForeignKey('Drivers', on_delete=models.DO_NOTHING)
+    client = models.ForeignKey('Clients', on_delete=models.DO_NOTHING)
+    product = models.ForeignKey('Products',on_delete=models.DO_NOTHING)
     number = models.IntegerField(default=0)
     date = models.DateField(auto_now_add=True)
+
+
+class Invoices(models.Model):
+    standart = models.IntegerField()
+    torg12 = models.IntegerField()

@@ -5,7 +5,7 @@
           position: sticky;
           top: 0;
         }
-        {% endblock %}
+{% endblock %}
 
 {% block content %}
 <figure class="text-center">
@@ -21,7 +21,7 @@
         {% for p in products %}
             <th scope="col">
                 <figure class="text-center">
-                    <span class="rotate-sm-90">{{ p.product }}</span>
+                    <span class="rotate-sm-90">{{ p.name }}</span>
                 </figure>
             </th>
         {% endfor %}
@@ -31,11 +31,11 @@
   <tbody>
     {% for c in clients %}
         <tr>
-            <th scope="row">{{ c.client }}</th>
+            <th scope="row">{{ c.name }}</th>
             {% for p in products %}
                 <td>
                     <div class="mb-3">
-                        <input name="{{ c.client }}:{{ p.product }}" type="number" class="form-control" id="exampleFormControlInput1" placeholder="Число">
+                        <input name="{{ c.name }}:{{ p.name }}" type="number" class="form-control" id="exampleFormControlInput1" placeholder="Число">
                     </div>
                 </td>
             {% endfor %}
