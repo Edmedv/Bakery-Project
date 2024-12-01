@@ -109,9 +109,10 @@ def print_orders(request):
         if len(sum_client) == 0:
             sum_client = [0 for v in range(len(value))]
         sum_client = [x + y for x, y in zip(sum_client, value)]
+
     print(drivers)
 
     return render(request, 'order/print_order.html', {'orders': orders,
                                                                           'drivers': drivers,
-                                                                          'today': today,
-                                                                          'sum_client': sum_client})
+                                                                          'sum_client': sum_client,
+                                                                          'today': today})

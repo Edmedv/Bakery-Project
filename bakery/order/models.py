@@ -25,7 +25,6 @@ class Products(models.Model):
 
 
 class Orders(models.Model):
-    driver = models.ForeignKey('Drivers', on_delete=models.DO_NOTHING)
     client = models.ForeignKey('Clients', on_delete=models.DO_NOTHING)
     product = models.ForeignKey('Products',on_delete=models.DO_NOTHING)
     number = models.IntegerField(default=0)
