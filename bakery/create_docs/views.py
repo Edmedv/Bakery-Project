@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from docxtpl import DocxTemplate
 from datetime import datetime, date
-import os
 from .functions import *
 import pandas as pd
 from order.models import Orders
+import os
 
 # Create your views here.
 
@@ -28,8 +28,8 @@ def add_xml():
     df.to_excel(f'{basedir}/Заявка.xlsx', sheet_name='Заявка', index=False)
 
 
-def add_docx():
-    basedir = 'create_docs/templates/docx/'
+def add_docx_standart():
+    basedir = f'create_docs/templates/docx/standart/'
     for dir in now_date:
         basedir += f'{dir}/'
         try:
@@ -41,15 +41,59 @@ def add_docx():
         doc = DocxTemplate("create_docs/templates/patterns/pattern_standart.docx")
 
         context = {}
+        context['sum_all'] = 0
         context['today'] = f'{day_now}.{now_date[1]}.{now_date[0] % 100}'
         client_id = list(order.values())[0]
-        create_context_for_docx(client_id, today, context)
+        create_context_for_docx_standart(client_id, today, context)
+        doc.render(context)
+        name_doc = f'{context['client']}.docx'
+        doc.save(f'{basedir}/{name_doc}')
+
+
+def add_docx_torg12():
+    basedir = f'create_docs/templates/docx/torg12/'
+    for dir in now_date:
+        basedir += f'{dir}/'
+        try:
+            os.mkdir(f'{basedir}')
+        except:
+            pass
+
+    for order in Orders.objects.filter(date=t).values('client').distinct():
+        doc = DocxTemplate("create_docs/templates/patterns/pattern_torg12.docx")
+
+        context = {}
+        context['sum_all'] = 0
+        context['today'] = f'{day_now}.{now_date[1]}.{now_date[0] % 100}'
+        client_id = list(order.values())[0]
+        create_context_for_docx_torg12(client_id, today, context)
 
         doc.render(context)
         name_doc = f'{context['client']}.docx'
         doc.save(f'{basedir}/{name_doc}')
-add_docx()
 
 
 def create_docx(request):
-    return render(request, 'create_docs/create_docx.html')
+    dir_date = f'{now_date[0]}/{now_date[1]}/{now_date[2]}'
+    if request.method == 'POST':
+        if 'standart' in request.POST:
+            add_docx_standart()
+        if 'torg12' in request.POST:
+            add_docx_torg12()
+        else:
+            req = list(request.POST)[1].split(':')
+            dir_os = 'C://Users/EdMedved/PycharmProjects/ProjectBakery/bakery/create_docs/templates/docx/'
+            if req[0] == 'open_standart':
+                os.startfile(f'{dir_os}standart/{dir_date}/{req[1]}')
+            if req[0] == 'open_torg12':
+                os.startfile(f'{dir_os}torg12/{dir_date}/{req[1]}')
+
+    clients = []
+    for c in Orders.objects.filter(date=today):
+        if c.client.name not in clients:
+            clients.append(c.client.name)
+    standart = os.listdir(f'create_docs/templates/docx/standart/{dir_date}')
+    torg12 = os.listdir(f'create_docs/templates/docx/torg12/{dir_date}')
+    return render(request, 'create_docs/create_docx.html', {'clients': clients,
+                                                            'standart': standart,
+                                                            'torg12': torg12})

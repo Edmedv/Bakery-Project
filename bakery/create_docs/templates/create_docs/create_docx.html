@@ -1,10 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h1>Привет!</h1>
-</body>
-</html>
+{% extends 'order/base.html' %}
+
+{% block content %}
+  <div class="container text-center">
+    <div class="row">
+      <div class="col">
+        <form method="post">
+        {% csrf_token %}
+          <button name="standart" class="btn btn-primary" type="submit">Сформировать стандартные накладные</button>
+        </form>
+      </div>
+      <div class="col">
+        <form method="post">
+        {% csrf_token %}
+          <button name="torg12" class="btn btn-primary" type="submit">Сформировать накладные ТОРГ12</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</form>
+
+<p></p>
+
+<div class="container lg">
+  <div class="row align-items-start">
+
+    <div class="col">
+      <p></p>
+      {% for s in standart %}
+      <form method="post">
+        {% csrf_token %}
+          <p><button name="open_standart:{{ s }}" type="submit" class="btn btn-link">{{ s }}</button></p>
+      </form>
+      {% endfor %}
+    </div>
+
+    <div class="col">
+      <p></p>
+      {% for t in torg12 %}
+        <form method="post">
+        {% csrf_token %}
+          <p><button name="open_torg12:{{ t }}" type="submit" class="btn btn-link">{{ t }}</button></p>
+      </form>
+      {% endfor %}
+    </div>
+
+  </div>
+</div>
+
+
+
+{% endblock %}

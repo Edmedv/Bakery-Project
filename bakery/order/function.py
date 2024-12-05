@@ -1,5 +1,5 @@
 from order.models import Drivers, Clients, Products, Orders
-
+from django.db.models import *
 
 def select_drivers():
     return Drivers.objects.all()
@@ -70,3 +70,12 @@ def add_orders(req, today):
                                       product=product_id,
                                       number=req[f'{r}'])
 
+
+def clean_orders(today):
+    for order in Orders.objects.filter(date=today).values('product').annotate(sum_product = Sum('number')):
+        if order['sum_product'] == 0:
+            Orders.objects.filter(date=today, product=order['product']).delete()
+
+    for order in Orders.objects.filter(date=today).values('client').annotate(sum_client = Sum('number')):
+        if order['sum_client'] == 0:
+            Orders.objects.filter(date=today, client=order['client']).delete()

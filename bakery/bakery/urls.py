@@ -18,11 +18,10 @@ from django.contrib import admin
 from django.urls import path, include
 
 from order.views import order
-from create_docs.views import create_docx
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', order, name='order'),
     path('order/', include('order.urls')),
-    path('create/', create_docx, name='create'),
+    path('create/', include('create_docs.urls')),
 ]
