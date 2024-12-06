@@ -6,14 +6,24 @@ import pandas as pd
 from order.models import Orders
 import os
 
+
 # Create your views here.
 
-t = datetime.today()
-today = date.today()
-now_date = [t.year, t.month, t.day]
-day_now = now_date[2] if now_date[2] // 10 > 0 else f'0{now_date[2]}'
+def create_dir(str):
+    t = datetime.today()
+    now_date = [t.year, t.month, t.day]
+    basedir = f'create_docs/templates/docx/{str}/'
+    for dir in now_date:
+        basedir += f'{dir}/'
+        try:
+            os.mkdir(f'{basedir}')
+        except:
+            pass
+
 
 def add_xml():
+    t = datetime.today()
+    now_date = [t.year, t.month, t.day]
     basedir = 'create_docs/templates/xml/'
     for dir in now_date:
         basedir += f'{dir}/'
@@ -29,6 +39,12 @@ def add_xml():
 
 
 def add_docx_standart():
+    t = datetime.today()
+    today = date.today()
+    now_date = [t.year, t.month, t.day]
+    day_now = now_date[2] if now_date[2] // 10 > 0 else f'0{now_date[2]}'
+    t = datetime.today()
+    now_date = [t.year, t.month, t.day]
     basedir = f'create_docs/templates/docx/standart/'
     for dir in now_date:
         basedir += f'{dir}/'
@@ -36,7 +52,6 @@ def add_docx_standart():
             os.mkdir(f'{basedir}')
         except:
             pass
-
     for order in Orders.objects.filter(date=t).values('client').distinct():
         doc = DocxTemplate("create_docs/templates/patterns/pattern_standart.docx")
 
@@ -51,6 +66,12 @@ def add_docx_standart():
 
 
 def add_docx_torg12():
+    t = datetime.today()
+    today = date.today()
+    now_date = [t.year, t.month, t.day]
+    day_now = now_date[2] if now_date[2] // 10 > 0 else f'0{now_date[2]}'
+    t = datetime.today()
+    now_date = [t.year, t.month, t.day]
     basedir = f'create_docs/templates/docx/torg12/'
     for dir in now_date:
         basedir += f'{dir}/'
@@ -58,7 +79,6 @@ def add_docx_torg12():
             os.mkdir(f'{basedir}')
         except:
             pass
-
     for order in Orders.objects.filter(date=t).values('client').distinct():
         doc = DocxTemplate("create_docs/templates/patterns/pattern_torg12.docx")
 
@@ -74,6 +94,11 @@ def add_docx_torg12():
 
 
 def create_docx(request):
+    create_dir('standart')
+    create_dir('torg12')
+    t = datetime.today()
+    today = date.today()
+    now_date = [t.year, t.month, t.day]
     dir_date = f'{now_date[0]}/{now_date[1]}/{now_date[2]}'
     if request.method == 'POST':
         if 'standart' in request.POST:

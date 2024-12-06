@@ -24,4 +24,5 @@ urlpatterns = [
     path('', order, name='order'),
     path('order/', include('order.urls')),
     path('create/', include('create_docs.urls')),
+    path('users/', include('users.urls')),
 ]
